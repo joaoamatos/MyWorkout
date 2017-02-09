@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <script type="text/javascript" charset="utf-8" src="js/phonegap-1.2.0.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            setTimeout(function () {
+                $('#loading').fadeOut();
+            }, 8000);
+            localStorage['current_url'] = window.location.href;
+            $('#website-title').html(localStorage['TITLE']);
+            $('#user_name_header').html(localStorage['user_first_name'] + ' ' + localStorage['user_last_name']);
+            /* MENU */
+            if (localStorage['menu_planotreino'] == '1') {
+                $('#menu_planotreino').show();
+                if (localStorage['login'] == '2') {
+                    $('#menu_planotreino').html('<img src="img/menu/images/_but__planotreino.png" style="width: 80%;max-width:133px;" />');
+                }
+            }
+            if (localStorage['menu_aval_fisicas'] == '1') {
+                $('#menu_aval_fisicas').show();
+                if (localStorage['login'] == '2') {
+                    $('#menu_aval_fisicas').html('<img src="img/menu/images/_but__avalfisica.png" style="width: 80%;max-width:133px;" />');
+                }
+            }
+            if (localStorage['menu_nutricao'] == '1') {
+                $('#menu_nutricao').show();
+                if (localStorage['login'] == '2') {
+                    $('#menu_nutricao').html('<img src="img/menu/images/_but__nutri.png" style="width: 80%;max-width:133px;" />');
+                }
+            }
+            if (localStorage['menu_servicos'] == '1') {
+                $('#menu_servicos').show();
+            }
+            if (localStorage['menu_agendamentos'] == '1') {
+                $('#menu_agendamentos').show();
+                if (localStorage['login'] == '2') {
+                    $('#menu_agendamentos').html('<img src="img/menu/images/_but__agenda.png" style="width: 80%;max-width:133px;" />');
+                }
+            }
+            if (localStorage['menu_contacorrente'] == '1') {
+                $('#menu_contacorrente').show();
+                if (localStorage['login'] == '2') {
+                    $('#menu_contacorrente').html('<img src="img/menu/images/_but__contacorrente.png" style="width: 80%;max-width:133px;" />');
+                }
+            }
+            if (localStorage['login'] == '1') {
+                var username = localStorage['username'];
+                var password = localStorage['password'];
+                $.post('http://fitgestpro.pt/' + localStorage['URL'] + '/app/alerts_and_appointments.php', {
+                    username: username,
+                    password: password
+                }, function (data) {
+                    obj = jQuery.parseJSON(data);
+                    if (obj) {
+                        if (obj.message && obj.message === 'SUCCESS') {
+                            if (obj.alerta && obj.alerta !== '') {
+                                $('#user-data').append('<br><b><font color="red">ALERTA:</font> ' + obj.alerta + '</br>');
+                            }
+                        } else {
+                            $('#loading').fadeOut();
+                        }
+                        if (obj.calendario_tipo) {
+                            localStorage['menu_marcacoes_pt'] = '1';
+                        } else {
+                            localStorage['menu_marcacoes_pt'] = '0';
+                        }
+                    }
+                    if (localStorage['menu_marcacoes_pt'] == '1') {
+                        $('#menu_marcacoes').html('<a href="schedules_pt.html"><img src="img/menu/but__marcacoes.png" style="width: 100%;" /></a>');
+                        $('#menu_marcacoes').show();
+                    } else if (localStorage['menu_marcacoes'] == '1') {
+                        $('#menu_marcacoes').show();
+                        if (localStorage['login'] == '2') {
+                            $('#menu_marcacoes').html('<img src="img/menu/images/_but__marcacoes.png" style="width: 80%;max-width:133px;" />');
+                        }
+                    }
+                });
+            } else {
+                $.post('http://fitgestpro.pt/' + localStorage['URL'] + '/app/services.php', function (response) {
+                    if (response && response !== '') {
+                        localStorage['menu_servicos'] = '1';
+                        $('#menu_servicos').show();
+                    } else {
+                        localStorage['menu_servicos'] = '0';
+                    }
+                    if (localStorage['menu_marcacoes_pt'] == '1') {
+                        $('#menu_marcacoes').html('<a href="schedules_pt.html"><img src="img/menu/but__marcacoes.png" style="width: 100%;" /></a>');
+                        $('#menu_marcacoes').show();
+                    } else if (localStorage['menu_marcacoes'] == '1') {
+                        $('#menu_marcacoes').show();
+                        if (localStorage['login'] == '2') {
+                            $('#menu_marcacoes').html('<img src="img/menu/images/_but__marcacoes.png" style="width: 80%;max-width:133px;" />');
+                        }
+                    }
+                });
+            }
+            $.post('http://fitgestpro.pt/' + localStorage['URL'] + '/app/check_services.php', {
+                username: localStorage['username'],
+                password: localStorage['password']
+            }, function (data) {
+                if (data == 1) {
+                    $('#services_image').attr('src', 'img/menu/but__servicos_m.png');
+                }
+            });
+            $.post('http://fitgestpro.pt/' + localStorage['URL'] + '/app/top_messages.php', function (response) {
+                obj = jQuery.parseJSON(response);
+                if (obj) {
+                    if (localStorage['login'] == '1') {
+                        if (obj.msg_topo_socios) {
+                            $('#message-top').html('<img src="img/icon_star.png" width="10px;" style="display:inline-block;" />  <h3 style="display:inline-block;">' + obj.msg_topo_socios + '</h3>');
+                            $('#message-top').show();
+                        } else {
+                            $('#message-top').hide();
+                        }
+                    }
+                    if (localStorage['login'] == '2') {
+                        if (obj.msg_topo_visitantes) {
+                            $('#message-top').html('<img src="img/icon_star.png" width="10px;" style="display:inline-block;" />  <h3 style="display:inline-block;">' + obj.msg_topo_visitantes + '</h3>');
+                            $('#message-top').show();
+                        } else {
+                            $('#message-top').hide();
+                        }
+                        $('#menu_contacorrente').html('<img src="img/menu/images/_but__contacorrente.png" style="width: 80%;max-width:133px;" />');
+                        $('#menu_contacorrente').show();
+                    }
+                }
+            });
+            $('#logout').click(function () {
+                localStorage['login'] = '0';
+                localStorage['user_id'] = '';
+                localStorage['user_nick'] = '';
+                localStorage['user_email'] = '';
+                localStorage['user_first_name'] = '';
+                localStorage['user_last_name'] = '';
+                /* MENU */
+                localStorage['menu_planotreino'] = '0';
+                localStorage['menu_aval_fisicas'] = '0';
+                localStorage['menu_marcacoes'] = '0';
+                localStorage['menu_nutricao'] = '0';
+                localStorage['menu_servicos'] = '0';
+                localStorage['menu_agendamentos'] = '0';
+                localStorage['current_url'] = '0';
+                window.location.assign('index.html');
+            });
+            $('#ngsis').click(function () {
+                var url_ = $(this).attr('href');
+                window.open(url_);
+            });
+            $.post('http://fitgestpro.pt/' + localStorage['URL'] + '/app/appointments.php', {
+                username: localStorage['username'],
+                password: localStorage['password']
+            }, function (response) {
+                $('#appointment').html(response);
+                $('#loading').fadeOut();
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="loading" style="background:#fff;z-index:9999;position:fixed;height:100%;width:100%;top:0;left:0;">
+    <div class="loader-animation"></div>
+</div>
+<a href="home.html">
+    <div class="header" style="background: #ee7115; border-bottom: 3px solid #5D5D5D; padding: 5px 0;">
+        <h1 id="website-title"></h1>
+    </div>
+</a>
+<div id="message-top"
+     style="display:none;background:#e6e6e6;width:100%;height:30px;margin-top:-15pxpx;text-align:center;line-height:5px;"></div>
+<div class="app">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td width="10%" align="left" valign="top">
+                <a href="home.html">
+                    <img id="go-home" src="img/menu/but__home.png" width="40px" style="margin-left: 10px;"/>
+                </a>
+            </td>
+            <td width="80%" align="center" valign="top">
+                <div id="user-data">
+                    <h2>Olá <span id="user_name_header"></span>
+                </div>
+            </td>
+            <td width="10%" align="right" valign="top">
+                <img id="logout" src="img/menu/but__logout.png" width="40px" style="margin-right: 10px;"/>
+            </td>
+        </tr>
+    </table>
+    <div id="appointment"></div>
+</div>
+<div class="footer">
+    <div class="menu-footer">
+        <div class="menu-item" id="menu_apresentacao" style="width: 11%;">
+            <a href="apresentation.html">
+                <img src="icon.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_planotreino" style="width: 11%;display:none;">
+            <a href="training_plan.html">
+                <img src="img/menu/but__planotreino.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_aval_fisicas" style="width: 11%;display:none;">
+            <a href="evaluations.html">
+                <img src="img/menu/but__avalfisica.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_marcacoes" style="width: 11%;display:none;">
+            <a href="schedules.html">
+                <img src="img/menu/but__marcacoes.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_nutricao" style="width: 11%;display:none;">
+            <a href="nutrition.html">
+                <img src="img/menu/but__nutri.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_servicos" style="width: 11%;display:none;">
+            <a href="services.html">
+                <img id="services_image" src="img/menu/but__servicos.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_agendamentos" style="width: 11%;display:none;">
+            <a href="appointments.html">
+                <img src="img/menu/but__agenda.png" style="width: 100%;"/>
+            </a>
+        </div>
+        <div class="menu-item" id="menu_contacorrente" style="width: 11%;display:none;">
+            <a href="current_account.html">
+                <img src="img/menu/but__contacorrente.png" style="width: 100%;"/>
+            </a>
+        </div>
+    </div>
+    <div class="social">
+        <a href="#">
+            <i class="fa fa-facebook-square fa-2x" style="color:#3b5998;"></i>
+        </a>
+        <a id="ngsis" style="float:right;font-size:1.5em" href="http://www.ngsis.com">by ngsis.com</a>
+    </div>
+</div>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>

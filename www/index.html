@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <script type="text/javascript" charset="utf-8" src="js/phonegap-1.2.0.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+        app.initialize();
+    </script>
+    <script>
+        /* INICIAR */
+        $(function () {
+            setTimeout(function () {
+                $('#loading').fadeOut();
+            }, 8000);
+            /* DEFINIR WEBSITE */
+            localStorage['URL'] = 'My Workout Fitness Studio'; //nome da instalação
+            localStorage['TITLE'] = 'My Workout Fitness Studio'; //nome do site
+            if (localStorage['remember'] == 1) {
+                $('#username').val(localStorage['username']);
+                $('#password').val(localStorage['password']);
+            }
+            $('#website-title').html(localStorage['TITLE']);
+            if (localStorage['current_url'] && localStorage['current_url'] !== '0') {
+                window.location.href = localStorage['current_url'];
+            }
+            var windowHeight = $(window).height();
+            var headerHeight = $('.header').height();
+            var img = (parseInt(windowHeight) / 2) - (headerHeight * 2);
+            $('#img').css('height', img + 'px');
+            $('#ngsis').click(function () {
+                var url_ = $(this).attr('href');
+                window.open(url_);
+            });
+            /* SUBMIT LOGIN */
+            $("form").submit(function (e) {
+                e.preventDefault();
+                $('#loading').fadeIn();
+                var username = $('#username').val();
+                var password = $('#password').val();
+                $.post('http://fitgestpro.pt/' + localStorage['URL'] + '/app/login.php', {
+                    username: username,
+                    password: password
+                }, function (data) {
+                    obj = jQuery.parseJSON(data);
+                    if (obj) {
+                        if (obj.message === 'SUCCESS') {
+                            localStorage['login'] = '1';
+                            localStorage['username'] = username;
+                            localStorage['password'] = password;
+                            localStorage['user_id'] = obj.user_id;
+                            localStorage['user_nick'] = obj.user_nick;
+                            localStorage['user_email'] = obj.user_email;
+                            localStorage['user_first_name'] = obj.user_first_name;
+                            localStorage['user_last_name'] = obj.user_last_name;
+                            if ($("#remember").is(':checked')) {
+                                localStorage['remember'] = '1';
+                            } else {
+                                localStorage['remember'] = '0';
+                            }
+                            /* MENU */
+                            localStorage['menu_planotreino'] = '0';
+                            localStorage['menu_aval_fisicas'] = '0';
+                            localStorage['menu_marcacoes'] = '0';
+                            localStorage['menu_nutricao'] = '0';
+                            localStorage['menu_servicos'] = '0';
+                            localStorage['menu_agendamentos'] = '0';
+                            localStorage['menu_contacorrente'] = '0';
+                            if (obj.menu_planotreino == '1') {
+                                localStorage['menu_planotreino'] = '1';
+                            }
+                            if (obj.menu_aval_fisicas == '1') {
+                                localStorage['menu_aval_fisicas'] = '1';
+                            }
+                            if (obj.menu_marcacoes == '1') {
+                                localStorage['menu_marcacoes'] = '1';
+                            }
+                            if (obj.menu_nutricao == '1') {
+                                localStorage['menu_nutricao'] = '1';
+                            }
+                            if (obj.menu_servicos == '1') {
+                                localStorage['menu_servicos'] = '1';
+                            }
+                            if (obj.menu_agendamentos == '1') {
+                                localStorage['menu_agendamentos'] = '1';
+                            }
+                            if (obj.menu_contacorrente == '1') {
+                                localStorage['menu_contacorrente'] = '1';
+                            }
+                            window.location.assign('home.html');
+                        } else if (obj.message === 'PASSWORD') {
+                            localStorage['login'] = '0';
+                            localStorage['username'] = '';
+                            localStorage['password'] = '';
+                            localStorage['user_id'] = '';
+                            localStorage['user_nick'] = '';
+                            localStorage['user_email'] = '';
+                            localStorage['user_first_name'] = '';
+                            localStorage['user_last_name'] = '';
+                            $('#password').attr('placeholder', 'Password incorreta...');
+                            $('#password').val('');
+                            $('#password').focus();
+                            $('#loading').fadeOut();
+                        } else if (obj.message === 'USERNAME') {
+                            localStorage['login'] = '0';
+                            localStorage['username'] = '';
+                            localStorage['password'] = '';
+                            localStorage['user_id'] = '';
+                            localStorage['user_nick'] = '';
+                            localStorage['user_email'] = '';
+                            localStorage['user_first_name'] = '';
+                            localStorage['user_last_name'] = '';
+                            $('#username').attr('placeholder', 'Utilizador não existe...');
+                            $('#username').val('');
+                            $('#password').val('');
+                            $('#username').focus();
+                            $('#loading').fadeOut();
+                        }
+                    }
+                });
+            });
+            $('#loading').fadeOut();
+        });
+    </script>
+    <script>
+        function visitor() {
+            localStorage['login'] = '2';
+            localStorage['user_id'] = '0';
+            localStorage['user_nick'] = 'Visitante';
+            localStorage['user_email'] = '';
+            localStorage['user_first_name'] = 'Visitante';
+            localStorage['user_last_name'] = '';
+
+            /* MENU */
+            localStorage['menu_planotreino'] = '1';
+            localStorage['menu_aval_fisicas'] = '1';
+            localStorage['menu_marcacoes'] = '1';
+            localStorage['menu_nutricao'] = '1';
+            localStorage['menu_servicos'] = '1';
+            localStorage['menu_agendamentos'] = '1';
+
+            window.location.assign('home.html');
+        }
+    </script>
+</head>
+<body>
+<div id="loading" style="background:#fff;z-index:9999;position:fixed;height:100%;width:100%;top:0;left:0;">
+    <div class="loader-animation"></div>
+</div>
+<a href="index.html">
+    <div class="header" style="background: #ee7115; border-bottom: 3px solid #5D5D5D; padding: 5px 0;">
+        <h1 id="website-title"></h1>
+    </div>
+</a>
+<div class="app" style="margin-top: 15px;background: rgba(255,255,255,0.8)">
+    <form id="login-form" name="login-form" method="POST">
+        <label for="username">Nome de Utilizador</label>
+        <input class="login-input" type="text" name="username" id="username" value=""
+               style="margin-top:0;margin-bottom:5px;"/>
+        <label for="password">Senha</label>
+        <input class="login-input" type="password" name="password" id="password" value=""
+               style="margin-top:0;margin-bottom:5px;"/>
+        <input type="submit" name="login" id="login" value="Iniciar Sessão"/>
+        <center>
+            <div onclick="visitor();" id="visitor">Entrar como Visitante</div>
+        </center>
+        <p><input type="checkbox" name="remember" id="remember" value="1" checked/> - Lembrar-me</p>
+        <p><a href="home.html">Esqueceu-se da password?</a></p>
+    </form>
+</div>
+<div id="img"
+     style="background: url('img/login-background.jpg');background-size:cover;background-position:bottom;background-repeat:no-repeat;margin-top:-80px;">
+</div>
+<div class="footer">
+    <div class="social">
+        <div class="social-icons">
+            <a href="#">
+                <i class="fa fa-facebook-square fa-2x" style="color:#3b5998;"></i>
+            </a>
+        </div>
+        <a id="ngsis" style="float:right;font-size:1.5em" href="http://www.ngsis.com">by ngsis.com</a>
+    </div>
+</div>
+</body>
+</html>

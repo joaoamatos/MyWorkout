@@ -1,0 +1,234 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
+    background-color: #fff;
+    font-family: 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+/* Portrait layout (default) */
+.app {
+    width: 90%; /* text area width */
+    text-align: center;
+    margin: 0 5% 5%;
+    padding-bottom: 50px;
+}
+
+a, a:active, a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+/* Landscape layout (with min-width) */
+@media screen and (min-aspect-ratio: 1/1) and (min-width: 400px) {
+    .app {
+        margin: 5%;
+    }
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0px;
+    overflow: visible;
+    padding: 0px;
+    text-align: center;
+}
+
+@keyframes fade {
+    from {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes fade {
+    from {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1.0;
+    }
+}
+
+.menu-item {
+    display: inline-block;
+    margin: 0%;
+}
+
+.menu-footer .menu-item {
+    display: inline-block;
+    margin: 0.33%;
+}
+
+.menu-footer {
+    width: 100%;
+    border-bottom: 1px solid #5D5D5D;
+}
+
+.footer {
+    background: #fff;
+    border-top: 1px solid #5D5D5D;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.social {
+    display: inline-block;
+    width: 90%;
+    padding: 5px 5%;
+}
+
+.social p {
+    display: inline-block;
+    font-size: 10px;
+    text-align: right;
+    width: 80%;
+}
+
+.social-icons {
+    width: 20%;
+    display: inline;
+}
+
+.render {
+    display: inline-block;
+    text-align: right;
+}
+
+#login {
+    width: 95%;
+    height: 40px;
+    line-height: 28px;
+    padding: 0 12px 2px;
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    -webkit-box-shadow: 0 1px 0 #006799;
+    box-shadow: 0 1px 0 #006799;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    margin: 10px 0;
+}
+
+#visitor {
+    width: 95%;
+    height: 40px;
+    line-height: 40px;
+    background: #00a9ed;
+    border-color: #0095de #0089cd #0089cd;
+    -webkit-box-shadow: 0 1px 0 #0089cd;
+    box-shadow: 0 1px 0 #0089cd;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #0089cd, 1px 0 1px #0089cd, 0 1px 1px #0089cd, -1px 0 1px #0095de;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    margin: 5px 0 10px 0;
+}
+
+.login-input {
+    width: 93%;
+    height: 30px;
+    margin: 10px 0;
+}
+
+label {
+    font-size: 17px;
+    margin: 10px 0;
+}
+
+#loading {
+    background: #fff;
+    z-index: 9999;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.loader-animation {
+    width: 100%;
+    height: 100%;
+    background-size: 50px;
+    left: 0;
+    top: 0;
+    background: url(../img/loading.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.bar-red {
+    background: #ff0000; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#ff0000, #b30000); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ff0000, #b30000); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ff0000, #b30000); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ff0000, #b30000); /* Standard syntax (must be last) */
+}
+
+.bar-green {
+    background: #008000; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#008000, #003400); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#008000, #003400); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#008000, #003400); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#008000, #003400); /* Standard syntax (must be last) */
+}
+
+.header {
+    background: #ef7c00 !important; /* Cor Barra Topo */
+}
